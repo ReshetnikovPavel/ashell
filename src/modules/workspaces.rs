@@ -41,7 +41,7 @@ fn get_workspaces() -> Vec<Workspace> {
 
     let mut current: usize = 1;
 
-    workspaces
+    let mut workspaces = workspaces
         .into_iter()
         .flat_map(|w| {
             if w.id < 0 {
@@ -80,7 +80,19 @@ fn get_workspaces() -> Vec<Workspace> {
                 res
             }
         })
-        .collect::<Vec<Workspace>>()
+        .collect::<Vec<Workspace>>();
+
+    if workspaces.last().is_some_and(|x| x.windows != 0) {
+        workspaces.push(Workspace {
+            id: (workspaces.len() + 1) as i32,
+            name: (workspaces.len() + 1).to_string(),
+            monitor_id: None,
+            active: false,
+            windows: 0,
+        });
+    }
+
+    workspaces
 }
 
 pub struct Workspaces {
